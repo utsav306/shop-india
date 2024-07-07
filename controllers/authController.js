@@ -6,7 +6,7 @@ import JWT from "jsonwebtoken"
 
 export const registerController = async (req, res) => {
     try {
-        const { name, email, password, phone, address } = req.body;
+        const { name, email, password, phone, address,answer } = req.body;
 
         // Check required fields
         if (!name) {
@@ -23,6 +23,9 @@ export const registerController = async (req, res) => {
         }
         if (!address) {
             return res.send({ message: "Address is required" });
+        }
+        if(!answer){
+            return res.send({ message: "Answer is required" });
         }
 
         // Check existing user via email
@@ -44,6 +47,7 @@ export const registerController = async (req, res) => {
             phone,
             address,
             password: hashedPassword,
+            answer
         }).save();
 
         res.status(201).send({
@@ -104,6 +108,7 @@ export const loginController = async (req, res) => {
                 email: user.email,
                 phone: user.phone,
                 address: user.address,
+                role:user.role,
                
             },
             token
@@ -133,3 +138,51 @@ export const testController = (req, res) => {
         res.send({ error });
     }
 }
+
+
+//forgot password controller
+export const forgotPasswordController = async (req, res) => {
+    try {
+        const { email, answer, newPassword } = req.body;
+        
+        if (!email) {
+            return res.status(400).send({ message: "Email is required" });
+        }
+        if (!answer) {
+            return res.status(400).send({ message: "Answer is required" });
+        }
+        if (!newPassword) {
+            return res.status(400).send({ message: "Password is required" });
+        }
+
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: "Email not registered",
+            });
+        }
+       
+        console.log("User's security answer:", user.answer);
+        if (user.answer === answer) {
+            const hashed = await hashPassword(newPassword);
+            await userModel.findByIdAndUpdate(user._id, { password: hashed });
+            return res.status(200).send({
+                success: true,
+                message: "Password Reset Successfully",
+            });
+        } else {
+            return res.status(400).send({
+                success: false,
+                message: "Wrong Security Answer",
+            });
+        }
+    } catch (error) {
+        console.error("Error in forgotPasswordController:", error);
+        return res.status(500).send({
+            success: false,
+            message: "Something went wrong",
+            error,
+        });
+    }
+};

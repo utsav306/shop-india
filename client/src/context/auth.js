@@ -21,7 +21,8 @@ axios.defaults.headers.common["Authorization"] = auth?.token;
         token: parseData.token,
       });
     }
-  }, [auth]);
+    //eslint-disable-next-line
+  }, []);
   return (
     <AuthContext.Provider value={[auth, setAuth]}>
       {children}
