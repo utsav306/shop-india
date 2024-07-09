@@ -6,6 +6,7 @@ import connectdb from "./config/db.js"
 import authRoutes from "./routes/authRoute.js"
 import cors from "cors"
 import categoryRoutes from "./routes/categoryRoutes.js"
+import productRoutes from "./routes/productRoutes.js"
 
 
 
@@ -23,6 +24,7 @@ connectdb();
 //routes
 app.use("/api/v1/auth",authRoutes)
 app.use("/api/v1/category",categoryRoutes)
+app.use("/api/v1/products",productRoutes)
 
 
 
