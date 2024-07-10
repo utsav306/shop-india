@@ -35,7 +35,7 @@ router.get('/product-photo/:pid',productPhotoController)
 
 
 //delete product controller
-router.delete("/product/:pid", deleteProductController);
+router.delete("/delete-product/:pid", deleteProductController);
 
 
 //update product controller

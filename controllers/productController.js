@@ -66,7 +66,7 @@ export const createProductController = async (req, res) => {
           console.log(error);
           res.status(500).send({
             success: false,
-            message: "Erorr in getting products",
+            message: "Error in getting products",
             error: error.message,
           });
         }
@@ -120,7 +120,7 @@ export const createProductController = async (req, res) => {
       //delete product controller
       export const deleteProductController = async (req, res) => {
         try {
-          await productModel.findByIdAndDelete(req.params.pid).select("-photo");
+          await ProductModel.findByIdAndDelete(req.params.pid).select("-photo");
           res.status(200).send({
             success: true,
             message: "Product Deleted successfully",
